@@ -1,3 +1,5 @@
+from collections import ChainMap
+
 class ProductDatabase:
 
     def __init__(self):
@@ -43,7 +45,7 @@ class ProductDatabase:
             "pistacios": {"calories": 97, "carbohydrates": 7, "proteins": 2, "fats": 29, "fibers": 11},
             "walnuts": {"calories": 117, "carbohydrates": 18, "proteins": 0, "fats": 17, "fibers": 5},
             "peanuts": {"calories": 102, "carbohydrates": 11, "proteins": 2, "fats": 15, "fibers": 16},
-            "chestnusts": {"calories": 88, "carbohydrates": 25, "proteins": 0, "fats": 21, "fibers": 15},
+            "chestnuts": {"calories": 88, "carbohydrates": 25, "proteins": 0, "fats": 21, "fibers": 15},
             "brazil nuts": {"calories": 112, "carbohydrates": 24, "proteins": 4, "fats": 34, "fibers": 2}
         }
         self.egg_and_dairy = {
@@ -55,3 +57,4 @@ class ProductDatabase:
             "cream": {"calories": 90, "carbohydrates": 13, "proteins": 0, "fats": 1, "fibers": 0},
             "butter": {"calories": 132, "carbohydrates": 9, "proteins": 4, "fats": 2, "fibers": 0}
         }
+        self.all_products = ChainMap(self.meats, self.fruits, self.egg_and_dairy, self.nuts, self.vegetables)
