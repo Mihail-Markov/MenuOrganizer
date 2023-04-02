@@ -32,10 +32,15 @@ class MenuCompiler:
 
                 #It has to be something similar but it is not exacly this - it generates more methods than neeeded
                 a = inspect.getmembers(database, predicate=inspect.ismethod)
-                #I want to generate a meal, but I cannot choose randomly because I have no sequence to choose from
+                #the code bellow generates always the same foods
                 self.current_menu[el] = random.sample(a[0], 1)
+                #i cannot calculate menu calories in particular any meal calories
+                #maybe i should change meals from class methods to dicts which could call a method to calculate their calories
+                food = self.current_menu[el]
+                f = database.food()
+                self.current_calories += database.calculate_meal_calories(food)
 
 
 
-
+        return self.compile_menu()
 
