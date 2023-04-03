@@ -1,10 +1,9 @@
 import random
 
+from databases.meal_compiler import Meal
 from person import Person
-from databases.breaksfast_database import Breakfasts
-from databases.lunch_database import Lunch
-from databases.dinner_database import Dinner
-from random import sample
+from databases.recipe_database import Recipes
+from collections import Counter
 import inspect
 
 class MenuCompiler:
@@ -14,33 +13,21 @@ class MenuCompiler:
         self.daily_calories = person.calorie_needed
         self.current_calories = 0
         self.current_menu = {"breakfast": '', "lunch": '', "dinner": ''}
+        self.current_components = Counter({"carbohydrates": 0, "proteins": 0, "fats": 0, "fibers": 0})
         self.chosen_menu = self.compile_menu()
 
     def compile_menu(self):
         #We want approximately the same calories as needed by the target person since I cannot guarantee absolute precision
         if self.daily_calories * 0.95 < self.current_calories < self.daily_calories * 1.05:
             return self.current_menu
-
-        for el in self.current_menu:
-            if self.current_menu[el] == "":
-                if el == "breakfast":
-                    database = Breakfasts
-                elif el == "lunch":
-                    database = Lunch
-                elif el == "dinner":
-                    database = Dinner
-
-                #It has to be something similar but it is not exacly this - it generates more methods than neeeded
-                a = inspect.getmembers(database, predicate=inspect.ismethod)
-                #the code bellow generates always the same foods
-                self.current_menu[el] = random.sample(a[0], 1)
-                #i cannot calculate menu calories in particular any meal calories
-                #maybe i should change meals from class methods to dicts which could call a method to calculate their calories
-                food = self.current_menu[el]
-                f = database.food()
-                self.current_calories += database.calculate_meal_calories(food)
-
-
-
+        r = Recipes()
+        self.current_menu["breakfast"] = random.choice(list(r.breakfasts.items()))
+        self.current_menu["lunch"] = random.choice(list(r.lunches.items()))
+        self.current_menu["dinner"] = random.choice(list(r.dinners.items()))
+        for recipe, ingredients in self.current_menu.values():
+            m = Meal(recipe, ingredients)
+            self.current_calories += m.calories
+            components = Counter(m.components)
+            self.current_components = components + self.current_components
         return self.compile_menu()
 
