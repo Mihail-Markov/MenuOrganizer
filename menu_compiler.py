@@ -20,6 +20,9 @@ class MenuCompiler:
         #We want approximately the same calories as needed by the target person since I cannot guarantee absolute precision
         if self.daily_calories * 0.95 < self.current_calories < self.daily_calories * 1.05:
             return self.current_menu
+        else:
+            self.current_calories = 0
+            self.current_components = Counter({"carbohydrates": 0, "proteins": 0, "fats": 0, "fibers": 0})
         r = Recipes()
         self.current_menu["breakfast"] = random.choice(list(r.breakfasts.items()))
         self.current_menu["lunch"] = random.choice(list(r.lunches.items()))
@@ -30,4 +33,4 @@ class MenuCompiler:
             components = Counter(m.components)
             self.current_components = components + self.current_components
         return self.compile_menu()
-
+        #the menus has too little calories, while the people need more. SHould tweak up the formulas for calories needed or the calories of products
